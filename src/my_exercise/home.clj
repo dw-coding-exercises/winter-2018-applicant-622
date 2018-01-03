@@ -96,6 +96,19 @@
    (ocd-id-explainer request)
    (current-elections-link request)])
 
+(defn docs [request]
+  [:div
+    [:h2 "What I would have added, given more time:"]
+    [:ul
+      [:li "Most importantly, I would format the results returned by the Democracy Works elections API"]
+      [:li "Retrieve county name based on address; I'm assuming I'd have to go find some other API for that"]
+      [:li "More features would require more validations/error handling; currently, there's an HTML validation that requires a state to be selected, but probably using the other fields would necessitate a similar approach"]
+      [:li "Maybe I'd make the UI a little fancier: special styling for required form fields, AJAX display of results, spell check for city names (probably more complicated than it's worth)"]]
+    [:h2 "Tests I would write:"]
+    [:ul 
+      [:li "build-ocd-ids: whether city and state are properly formatted; whether presence/absence of a city (or any other) input produces the correct ocd-ids"]
+      [:li "call-api: I assume the API is relatively bulletproof (I noticed that entering a nonsense place name just returns '0'), but maybe I'd test whether an invalid ocd-id string returns a bad result"]]])
+
 (defn address-form [_]
   [:div {:class "address-form"}
    [:h1 "Find my next election"]
@@ -119,7 +132,8 @@
               :name "city"}]
      [:label {:for "state-field"} "State:"]
      [:select {:id "state-field"
-               :name "state"}
+               :name "state"
+               :required "true"}
       [:option ""]
       (for [state us-state/postal-abbreviations]
         [:option {:value state} state])]
@@ -134,5 +148,5 @@
 (defn page [request]
   (html5
    (header request)
-   (instructions request)
+   (docs request)
    (address-form request)))
